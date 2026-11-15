@@ -1,0 +1,11 @@
+
+<div
+  class="summary-card"
+  [class.income]="type() === 'income'"
+  [class.expenses]="type() === 'expenses'"
+  [class.savings]="type() === 'savings'"
+>
+  <h3>{{ title() }}</h3>
+
+  <p>{{ amount() | currency:'NGN':'₦':'1.2-2' }}</p>
+</div>

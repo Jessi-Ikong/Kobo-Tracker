@@ -1,0 +1,63 @@
+<div class="dashboard">
+  <div class="dashboard-heading">
+    <div>
+      <h2>Financial Overview</h2>
+      <p>Here's a breakdown of your finances.</p>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <app-financial-summary-card title="Total Balance" [amount]="totalBalance()" type="balance" />
+
+    <app-financial-summary-card title="Total Income" [amount]="totalIncome()" type="income" />
+
+    <app-financial-summary-card title="Total Expenses" [amount]="totalExpenses()" type="expenses" />
+
+    <app-financial-summary-card title="Total Savings" [amount]="totalSavings()" type="savings" />
+
+    <section class="chart-section">
+      <h3>Income vs Expenses</h3>
+      <p>Compare your income and spending over the last six months.</p>
+
+      <app-income-expense-chart />
+    </section>
+
+    <section class="recent-section">
+      <div class="section-heading">
+        <div>
+          <h3>Recent transactions</h3>
+          <p>Your latest activity at a glance.</p>
+        </div>
+        <a routerLink="/transactions">View all</a>
+      </div>
+
+      @if (recentTransactions().length === 0) {
+        <p class="recent-empty">No transactions yet. Add one below to get started.</p>
+      } @else {
+        <div class="recent-list">
+          @for (transaction of recentTransactions(); track transaction.id) {
+            <div class="recent-row">
+              <div class="recent-description">
+                <strong>{{ transaction.description }}</strong>
+                <span
+                  >{{ transaction.category || 'Income' }} ·
+                  {{ transaction.date | date: 'mediumDate' }}</span
+                >
+              </div>
+              <span
+                class="recent-amount"
+                [class.income-amount]="transaction.type === 'income'"
+                [class.expense-amount]="transaction.type === 'expense'"
+              >
+                {{ transaction.type === 'income' ? '+' : '−'
+                }}{{ transaction.amount | currency: 'NGN' : '₦' : '1.2-2' }}
+              </span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
+
+  <app-transaction-form />
+</div>

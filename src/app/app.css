@@ -1,0 +1,185 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #202b3c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+/* Sidebar */
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background: #142238;
+  color: #ffffff;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 55px;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: #16a36a;
+  border-radius: 10px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.navigation-label {
+  color: #8996a9;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.navigation-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px;
+  border-radius: 8px;
+  color: #bdc7d5;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.navigation-link.active {
+  background: #1eaa73;
+  color: #ffffff;
+}
+
+.navigation-link span:first-child {
+  font-size: 19px;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid #304057;
+  padding-top: 20px;
+}
+
+.sidebar-footer p {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.sidebar-footer span {
+  color: #8996a9;
+  font-size: 12px;
+}
+
+/* Main Content */
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.top-header {
+  min-height: 105px;
+  padding: 25px 35px;
+  background: #ffffff;
+  border-bottom: 1px solid #e9edf2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-header h1 {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.top-header p {
+  color: #8792a2;
+  font-size: 13px;
+  margin: 0;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e0f5eb;
+  color: #168653;
+  font-weight: bold;
+}
+
+.page-content {
+  padding: 30px 35px;
+}
+
+/* Mobile Layout */
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 75px;
+    padding: 20px 10px;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .brand-name,
+  .navigation-label,
+  .navigation-link span:last-child,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .navigation-link {
+    justify-content: center;
+    padding: 13px 5px;
+  }
+
+  .top-header {
+    padding: 20px;
+  }
+
+  .page-content {
+    padding: 20px;
+  }
+}

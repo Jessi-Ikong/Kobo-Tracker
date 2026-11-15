@@ -1,0 +1,201 @@
+<section class="transactions-page" aria-labelledby="transactions-title">
+  <header class="page-heading">
+    <div>
+      <h2 id="transactions-title">Transactions</h2>
+      <p>Search, review, and manage your income and spending.</p>
+    </div>
+    <span class="result-count">{{ filteredTransactions().length }} shown</span>
+  </header>
+
+  <section class="filters" aria-label="Filter transactions">
+    <div class="filter-field search-field">
+      <label for="transaction-search">Search description</label>
+      <input
+        id="transaction-search"
+        type="search"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+        placeholder="Search transactions"
+      />
+    </div>
+
+    <div class="filter-field">
+      <label for="transaction-type-filter">Type</label>
+      <select
+        id="transaction-type-filter"
+        [ngModel]="typeFilter()"
+        (ngModelChange)="typeFilter.set($event)"
+      >
+        <option value="all">All types</option>
+        <option value="income">Income</option>
+        <option value="expense">Expenses</option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="transaction-category-filter">Category</label>
+      <select
+        id="transaction-category-filter"
+        [ngModel]="categoryFilter()"
+        (ngModelChange)="categoryFilter.set($event)"
+      >
+        <option value="all">All categories</option>
+        @for (category of categories(); track category) {
+          <option [value]="category">{{ category }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="date-from">From</label>
+      <input
+        id="date-from"
+        type="date"
+        [ngModel]="dateFrom()"
+        (ngModelChange)="dateFrom.set($event)"
+      />
+    </div>
+
+    <div class="filter-field">
+      <label for="date-to">To</label>
+      <input id="date-to" type="date" [ngModel]="dateTo()" (ngModelChange)="dateTo.set($event)" />
+    </div>
+
+    <div class="filter-field sort-field">
+      <label for="transaction-sort">Sort by date</label>
+      <select id="transaction-sort" [ngModel]="sortOrder()" (ngModelChange)="sortOrder.set($event)">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+  </section>
+
+  <p class="feedback" role="status" aria-live="polite">{{ feedback }}</p>
+  @if (errorMessage) {
+    <p class="error-message" role="alert">{{ errorMessage }}</p>
+  }
+
+  @if (filteredTransactions().length === 0) {
+    <div class="empty-state">
+      @if (transactions().length === 0) {
+        <h3>No transactions yet</h3>
+        <p>Transactions you add from the dashboard will appear here.</p>
+      } @else {
+        <h3>No matching transactions</h3>
+        <p>Try changing or clearing your filters.</p>
+      }
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Description</th>
+            <th scope="col">Category</th>
+            <th scope="col">Date</th>
+            <th scope="col">Type</th>
+            <th scope="col" class="amount-heading">Amount</th>
+            <th scope="col"><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (transaction of filteredTransactions(); track transaction.id) {
+            <tr [class.editing-row]="editingId() === transaction.id">
+              @if (editingId() === transaction.id) {
+                <td colspan="6">
+                  <form class="edit-form" (ngSubmit)="saveEdit(transaction)">
+                    <label>
+                      <span>Description</span>
+                      <input
+                        name="editDescription"
+                        type="text"
+                        [(ngModel)]="editDescription"
+                        maxlength="80"
+                        required
+                      />
+                    </label>
+                    <label>
+                      <span>Type</span>
+                      <select name="editType" [(ngModel)]="editType">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>Amount (₦)</span>
+                      <input
+                        name="editAmount"
+                        type="number"
+                        [(ngModel)]="editAmount"
+                        min="0.01"
+                        step="0.01"
+                        required
+                      />
+                    </label>
+                    @if (editType === 'expense') {
+                      <label>
+                        <span>Category</span>
+                        <input
+                          name="editCategory"
+                          type="text"
+                          [(ngModel)]="editCategory"
+                          maxlength="40"
+                          required
+                        />
+                      </label>
+                    }
+                    <label>
+                      <span>Date</span>
+                      <input name="editDate" type="date" [(ngModel)]="editDate" required />
+                    </label>
+                    <div class="edit-actions">
+                      <button class="save-button" type="submit">Save</button>
+                      <button class="secondary-button" type="button" (click)="cancelEdit()">
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </td>
+              } @else {
+                <td class="description-cell">
+                  <strong>{{ transaction.description }}</strong>
+                </td>
+                <td>{{ transaction.category || '—' }}</td>
+                <td>{{ transaction.date | date: 'mediumDate' }}</td>
+                <td>
+                  <span
+                    class="type-badge"
+                    [class.income-badge]="transaction.type === 'income'"
+                    [class.expense-badge]="transaction.type === 'expense'"
+                  >
+                    {{ transaction.type === 'income' ? 'Income' : 'Expense' }}
+                  </span>
+                </td>
+                <td
+                  class="amount-cell"
+                  [class.income-amount]="transaction.type === 'income'"
+                  [class.expense-amount]="transaction.type === 'expense'"
+                >
+                  {{ transaction.type === 'income' ? '+' : '−'
+                  }}{{ transaction.amount | currency: 'NGN' : '₦' : '1.2-2' }}
+                </td>
+                <td class="row-actions">
+                  <button class="secondary-button" type="button" (click)="startEdit(transaction)">
+                    Edit
+                  </button>
+                  <button
+                    class="delete-button"
+                    type="button"
+                    (click)="deleteTransaction(transaction)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
