@@ -1,6 +1,13 @@
 <div class="app-shell">
+  <div
+    class="mobile-backdrop"
+    [class.visible]="isMobileMenuOpen"
+    (click)="closeMobileMenu()"
+    aria-hidden="true"
+  ></div>
+
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.open]="isMobileMenuOpen">
     <div class="brand">
       <span class="brand-icon">₦</span>
       <span class="brand-name">KoboTracker</span>
@@ -15,6 +22,7 @@
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
         ariaCurrentWhenActive="page"
+        (click)="closeMobileMenu()"
       >
         <span aria-hidden="true">▦</span>
         <span>Dashboard</span>
@@ -25,6 +33,7 @@
         routerLink="/transactions"
         routerLinkActive="active"
         ariaCurrentWhenActive="page"
+        (click)="closeMobileMenu()"
       >
         <span aria-hidden="true">↔</span>
         <span>Transactions</span>
@@ -40,9 +49,24 @@
   <!-- Main Application Area -->
   <main class="main-content">
     <header class="top-header">
-      <div>
-        <h1>KoboTracker</h1>
-        <p>Your finances, clearly in view.</p>
+      <div class="top-header-left">
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          [attr.aria-expanded]="isMobileMenuOpen"
+          (click)="toggleMobileMenu()"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div>
+          <h1>KoboTracker</h1>
+          <p>Your finances, clearly in view.</p>
+        </div>
       </div>
 
       <div class="profile">

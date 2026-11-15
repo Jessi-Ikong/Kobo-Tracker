@@ -22,4 +22,20 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('KoboTracker');
   });
+
+  it('should toggle the mobile menu when the menu button is clicked', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const menuButton = compiled.querySelector('.menu-toggle') as HTMLButtonElement;
+    const sidebar = compiled.querySelector('.sidebar') as HTMLElement;
+
+    expect(menuButton).toBeTruthy();
+    expect(sidebar.classList.contains('open')).toBeFalsy();
+
+    menuButton.click();
+    fixture.detectChanges();
+
+    expect(sidebar.classList.contains('open')).toBeTruthy();
+  });
 });
